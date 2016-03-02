@@ -1,4 +1,4 @@
-from charms.ansible import Ansible
+from charms.ansible import apply_playbook
 from mock import patch
 import pytest
 
