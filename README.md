@@ -1,5 +1,7 @@
 # charms.ansible
 
+[![Build Status](https://travis-ci.org/chuckbutler/charms.ansible.svg?branch=master)](https://travis-ci.org/chuckbutler/charms.ansible)
+
 Do you have existing ansible playbooks you want to use in Juju Charms? This
 library works in tandem with `layer:ansible` to deliver a consistent Ansible with
 juju experience. Just bring your playbooks and operational knowledge.
