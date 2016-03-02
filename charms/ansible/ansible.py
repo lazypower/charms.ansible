@@ -118,7 +118,7 @@ ansible_hosts_path = '/etc/ansible/hosts'
 ansible_vars_path = '/etc/ansible/host_vars/localhost'
 
 
-def install_ansible_support(from_ppa=True, ppa_location='ppa:rquillo/ansible'):
+def install_ansible_support(from_ppa=True, ppa_location='ppa:ansible/ansible'):
     """Installs the ansible package.
 
     By default it is installed from the `PPA`_ linked from
