@@ -1,0 +1,17 @@
+*.pyc
+.tox
+.coverage
+.unit-state.db
+.cache
+charms.ansible.egg-info/
+__pycache__/
+dist/
+build/
+MANIFEST
+.env/
+coverage.xml
+.project
+.pydevproject
+.settings
+*~
+.venv

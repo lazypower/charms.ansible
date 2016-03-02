@@ -1,0 +1,19 @@
+language: python
+python:
+- '3.4'
+- '3.5'
+install:
+- pip install tox
+- pip install python-coveralls
+after_success:
+  - coveralls
+script:
+- tox
+deploy:
+  provider: pypi
+  user: lazypower
+  password:
+    secure: K3tAteozWEdw83Zfif8kUHsSCstBkXMzuYx6MZaxbKyTApt+huJdgxBJMrmI9xbpsDl5pAb5unSj2IVPLhjbMP/js1w0ul7EhDWvA3ZoZSOvhJnhOhipg3992xAIycw7flBXcRLCLYcmfDe30cszLYRLSqirLv1UIb11eOvouIH+pGbYc5f6K9XOjWGOLVIGor7lxJHsUOmfbIDhNNqSiFdjdvrzOAFhPvV8Mn7sOlV/culwvNS1WLzQ2r0IR5CZ7bjT+H/PTRdPEX6Kpq/ipdlkVIkMWNaBs9Hr4Y0vMGow9cPTvS46gc6g9NPOo25RYVjzF+WsmK2v3OO7qx4uoFhkwhz0VjwELiFcQyViCUcR0uDJsK3QEzeEo5/+crnNlJIhY7KaGcigJousPsim8R5IaudMrSI70G4N6rKXC+eBGYVHvDU0XnJLcpQvSr8c5g0C/YPhgHykrei92HklUj9sGlMGj6Rq9bsLuUaAW0MmqVzYjKzCeI5JEPLeTyKLxUjT02GsAWS4f/JKvHz8d1L7b5OxyWMR33Q9PlRAsj0cV5ZGiJNZ+h/bJzfcdVAYvU0y5sUAJVjXUZoYqRmlXosBSlBW/08NfyAck0tYoBaY+WZ11XYhCfj9Q661Xw2r12GrRZ0d69KZtnOfC44o1D6ae6GQsTTg0mDDc3SCWX8=
+  on:
+    tags: true
+    repo: juju-solutions/charms.ansible
