@@ -5,7 +5,7 @@ library works in tandem with `layer:ansible` to deliver a consistent Ansible wit
 juju experience. Just bring your playbooks and operational knowledge.
 
 This library offers two methods: method 1 is based on calling
-`ansible-playbook` CLI, where method 2 is using Ansible Python API.
+`ansible-playbook` CLI, where method 2 is using [Ansible Python API][6].
 
 # Method 1
 
