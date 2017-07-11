@@ -248,7 +248,7 @@ advantage of the [Ansible Python API][6].
 5. Playbook execution. Running it is to use
    Ansible's API call `PlaybookExecutor`.
 
-      ```
+      ```python
       self.pbex = playbook_executor.PlaybookExecutor(
           playbooks=pbs,
           inventory=self.inventory,
