@@ -1,0 +1,10 @@
+repo: hpcgitlab.labs.lenovo.com/WSS/wss.git
+includes:
+  - 'layer:basic'
+options:
+  basic:
+    packages:
+      - libffi-dev
+      - libssl-dev
+      - python
+      - python3-dev
