@@ -155,15 +155,15 @@ advantage of the [Ansible Python API][6].
 
 
      ```yaml
-      includes:
-        - 'layer:basic'
-      options:
-        basic:
-          packages:
-            - libffi-dev
-            - libssl-dev
-            - python
-            - python3-dev
+     includes:
+       - 'layer:basic'
+     options:
+       basic:
+         packages:
+           - libffi-dev
+           - libssl-dev
+           - python
+           - python3-dev
       ```
 
 [7]: https://github.com/juju-solutions/layer-basic
@@ -173,28 +173,29 @@ advantage of the [Ansible Python API][6].
 
 [8]: https://packaging.python.org/discussions/wheel-vs-egg/?highlight=wheel
 
-      <pre class="brush:plain;">
+      ```
       ansible==2.2.0
-      </pre>
+      ```
 
 3. `ansible.cfg`. Instead of using a global config, this is local so
    each charm can have its own variation if desired.
 
-      <pre class="brush:plain;">
+      ```
       [defaults]
       inventory = ./hosts
       log_path = /var/log/ansible/ansible.log
       remote_tmp = $HOME/.ansible/tmp
       local_tmp = $HOME/.ansible/tmp
+      
       [ssh_connection]
       ssh_args = -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o ControlMaster=auto -o ControlPersist=60s
       control_path = ~/.ansible/cp/ansible-ssh-%%h-%%p-%%r
-      </pre>
+      ```
 
 4. Options. Constructed a class to be the abstraction of Ansible
    options:
 
-      <pre class="brush:python;">
+      ```python
       class Options(object):
           """
           Options class to replace Ansible OptParser
@@ -242,12 +243,12 @@ advantage of the [Ansible Python API][6].
           listtasks=None,
           listtags=[],
           module_path=None
-      </pre>
+      ```
 
 5. Playbook execution. Running it is to use
    Ansible's API call `PlaybookExecutor`.
 
-      <pre class="brush:python;">
+      ```
       self.pbex = playbook_executor.PlaybookExecutor(
           playbooks=pbs,
           inventory=self.inventory,
@@ -257,7 +258,7 @@ advantage of the [Ansible Python API][6].
           passwords=passwords)
       ....
       self.pbex.run()
-      </pre>
+      ```
 
 ## Charm integration
 
@@ -265,15 +266,15 @@ Integrating with charm takes the followings:
 
 1. Include layer. In `layer.yaml`:
 
-      <pre class="brush:plain;">
+      ```yaml
       includes:
         - 'layer:basic'
         - 'layer:ansible'
-      </pre>
+      ```
 
 2. Create a `playbooks` folder and place playbooks here:
 
-      <pre class="brush:plain;">
+      ```
       .
       ├── config.yaml
       ├── icon.svg
@@ -283,24 +284,24 @@ Integrating with charm takes the followings:
       │   └── test.yaml
       └── reactive
           └── solution.py
-      </pre>
+      ```
 
 3. Using `config.yaml` to pass in playbook for each action that is
    defined in the charm states. For example, define `test.yaml` for an
    action in `state-0`:
 
-      <pre class="brush:plain;">
+      ```yaml
       options:
         state-0-playbook:
           type: string
           default: "test.yaml"
           description: "Playbook for..."
-      </pre>
+      ```
 
 4. Define the playbook. For example, a _hello world_ that will create
    a file `/tmp/testfile.txt'.
 
-      <pre class="brush:yaml;">
+      ```yaml
       - name: This is a hello-world example
         hosts: 127.0.0.1
         tasks:
@@ -308,7 +309,7 @@ Integrating with charm takes the followings:
           copy: content="hello world\n" dest=/tmp/testfile.txt
           tags:
             - sth
-      </pre>
+      ```
 
     Note that `tags` value `sth` must match playbook run call (see
     below).
@@ -316,7 +317,7 @@ Integrating with charm takes the followings:
 5. In charm `.py` file, `from charms.layer.task import Runner`, then
    in `state-0` to call given playbook:
 
-      <pre class="brush:python;">
+      ```python
       playbook = config['state-0-playbook']
       runner = Runner(
           tags = 'sth', # <-- must match the tag in the playbook
@@ -329,4 +330,4 @@ Integrating with charm takes the followings:
           verbosity = 0
       )
       stats = runner.run()
-      </pre>
+      ```
