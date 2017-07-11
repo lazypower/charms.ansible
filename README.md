@@ -153,7 +153,8 @@ advantage of the [Ansible Python API][6].
    Ubuntu because it misses a few dependencies. Using [layer-basic][7]
    by listing them out in `layer.yaml`:
 
-     <pre class="brush:yaml;">
+
+     ```yaml
       includes:
         - 'layer:basic'
       options:
@@ -163,7 +164,7 @@ advantage of the [Ansible Python API][6].
             - libssl-dev
             - python
             - python3-dev
-     </pre>
+      ```
 
 [7]: https://github.com/juju-solutions/layer-basic
 
