@@ -102,17 +102,16 @@ class Options(object):
 class Runner(object):
 
     def __init__(self,
-                 hostnames,
                  playbooks,
                  tags,  # must have
-                 private_key_file,
-                 run_data,
-                 become_pass,
-                 connection = 'ssh', # smart|ssh|local
+                 extra_vars={},
+                 hostnames='127.0.0.1',
+                 connection='local',  # smart|ssh|local
+                 private_key_file='',
+                 become_pass='',
                  vault_pass='',
                  verbosity=0):
 
-        self.run_data = run_data
         self.options = Options()
         self.options.tags = tags,
         self.options.private_key_file = private_key_file
@@ -121,6 +120,7 @@ class Runner(object):
         self.options.become = True
         self.options.become_method = 'sudo'
         self.options.become_user = 'root'
+        self.options.extra_vars = extra_vars
 
         # Set global verbosity
         self.display = Display()
@@ -139,12 +139,12 @@ class Runner(object):
 
         # All the variables from all the various places
         self.variable_manager = VariableManager()
-        self.variable_manager.extra_vars = self.run_data
+        self.variable_manager.extra_vars = extra_vars
 
         # Parse hosts, I haven't found a good way to
         # pass hosts in without using a parsed template :(
         # (Maybe you know how?)
-        self.hosts = NamedTemporaryFile(delete=False,mode='wt')
+        self.hosts = NamedTemporaryFile(delete=False, mode='wt')
         self.hosts.write("""[run_hosts]\n%s""" % hostnames)
         self.hosts.close()
 
@@ -166,9 +166,15 @@ class Runner(object):
         # Playbook to run. Assumes it is
         # local and relative to this python file
         # in "../../../playbooks" directory.
+        dirname = os.path.dirname(__file__) or '.'
         pb_rel_dir = '../../../playbooks'
-        pb_dir = os.path.join(os.path.dirname(__file__), pb_rel_dir)
-        pbs = ["%s/%s" % (pb_dir, pb) for pb in playbooks]
+        pb_dir = os.path.join(dirname, pb_rel_dir)
+        self.options.module_path = os.path.join(pb_dir, 'library')
+
+        # os.environ['ANSIBLE_CONFIG'] = os.path.abspath(os.path.dirname(__file__))
+
+        # pbs = ["%s/%s" % (pb_dir, pb) for pb in playbooks]
+        pbs = [os.path.join(pb_dir, pb) for pb in playbooks]
 
         # Setup playbook executor, but don't run until run() called
         self.pbex = playbook_executor.PlaybookExecutor(
@@ -197,7 +203,7 @@ class Runner(object):
         # the playbook callback file
         # self.pbex._tqm.send_callback(
         #     'record_logs',
-        #     user_id=self.run_data['user_id'],
+        #     user_id=self.extra_vars['user_id'],
         #     success=run_success
         # )
 
