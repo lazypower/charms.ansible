@@ -1,0 +1,5 @@
+cffi
+enum34
+ipaddress
+cryptography
+ansible==2.2.0
