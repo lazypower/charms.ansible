@@ -1,6 +1,6 @@
-from ansible import apply_playbook
-from ansible import install_ansible_support
-from host import *
+from charms.ansible.ansible import apply_playbook
+from charms.ansible.ansible import install_ansible_support
+from charms.ansible.host import *
 
 class Ansible:
 
