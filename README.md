@@ -174,7 +174,7 @@ advantage of the [Ansible Python API][6].
 [8]: https://packaging.python.org/discussions/wheel-vs-egg/?highlight=wheel
 
       ```
-      ansible==2.4.2
+      ansible==2.4.2.0
       ```
 
 3. `ansible.cfg`. Instead of using a global config, this is local so
