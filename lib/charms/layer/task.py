@@ -104,6 +104,7 @@ class Runner(object):
     def __init__(self,
                  playbooks,
                  tags,  # must have
+                 listtags=[],
                  extra_vars={},
                  hostnames='127.0.0.1',
                  connection='local',  # smart|ssh|local
@@ -114,6 +115,7 @@ class Runner(object):
 
         self.options = Options()
         self.options.tags = tags,
+        self.options.listtags = listtags,
         self.options.private_key_file = private_key_file
         self.options.verbosity = verbosity
         self.options.connection = connection
