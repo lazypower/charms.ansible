@@ -210,4 +210,4 @@ class Runner(object):
         # Remove created temporary files
         os.remove(self.hosts.name)
 
-        return stats
+        return run_success, stats
