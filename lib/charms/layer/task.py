@@ -2,10 +2,10 @@ import os
 from tempfile import NamedTemporaryFile
 
 from ansible.executor import playbook_executor
-from ansible.inventory import Inventory
+from ansible.inventory.manager import InventoryManager
 from ansible.parsing.dataloader import DataLoader
 from ansible.utils.display import Display
-from ansible.vars import VariableManager
+from ansible.vars.manager import VariableManager
 
 
 class Options(object):
@@ -19,7 +19,7 @@ class Options(object):
                  subset=None,
                  module_paths=None,
                  extra_vars=None,
-                 forks=None,
+                 forks=1,
                  ask_vault_pass=None,
                  vault_password_files=None,
                  new_vault_password_file=None,
@@ -104,6 +104,7 @@ class Runner(object):
     def __init__(self,
                  playbooks,
                  tags,  # must have
+                 listtags=[],
                  extra_vars={},
                  hostnames='127.0.0.1',
                  connection='local',  # smart|ssh|local
@@ -114,6 +115,7 @@ class Runner(object):
 
         self.options = Options()
         self.options.tags = tags,
+        self.options.listtags = listtags,
         self.options.private_key_file = private_key_file
         self.options.verbosity = verbosity
         self.options.connection = connection
@@ -135,12 +137,7 @@ class Runner(object):
 
         # Gets data from YAML/JSON files
         self.loader = DataLoader()
-        self.loader.set_vault_password(vault_pass)
-
-        # All the variables from all the various places
-        self.variable_manager = VariableManager()
-        self.variable_manager.extra_vars = extra_vars
-
+        self.loader.set_vault_secrets(vault_pass)
         # Parse hosts, I haven't found a good way to
         # pass hosts in without using a parsed template :(
         # (Maybe you know how?)
@@ -157,11 +154,14 @@ class Runner(object):
         # hostnames = {"customers": {"hosts": [hostnames]}}
 
         # Set inventory, using most of above objects
-        self.inventory = Inventory(
-            loader=self.loader,
-            variable_manager=self.variable_manager,
-            host_list=self.hosts.name)
-        self.variable_manager.set_inventory(self.inventory)
+        self.inventory = InventoryManager(
+            loader=self.loader, sources=[self.hosts.name])
+
+        # All the variables from all the various places
+        self.variable_manager = VariableManager(loader=self.loader,
+           inventory=self.inventory)
+
+        self.variable_manager.extra_vars = extra_vars
 
         # Playbook to run. Assumes it is
         # local and relative to this python file
@@ -210,4 +210,4 @@ class Runner(object):
         # Remove created temporary files
         os.remove(self.hosts.name)
 
-        return stats
+        return run_success, stats
